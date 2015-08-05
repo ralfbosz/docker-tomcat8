@@ -17,9 +17,9 @@ RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=acc
     ${JAVA8_URL} && \
     tar -xf jdk*.tar.gz && \
     rm jdk*.tar.gz && \
-    chown -R root:root ${JAVA_HOME} \
-    alternatives --install /usr/bin/java java /opt/${JAVA_HOME}/bin/java 1 \
-    alternatives --install /usr/bin/jar jar /opt/${JAVA_HOME}/bin/jar 1 \
+    chown -R root:root ${JAVA_HOME} && \
+    alternatives --install /usr/bin/java java /opt/${JAVA_HOME}/bin/java 1 && \
+    alternatives --install /usr/bin/jar jar /opt/${JAVA_HOME}/bin/jar 1 && \
     alternatives --install /usr/bin/javac javac /opt/${JAVA_HOME}/bin/javac 1
 
 # Install Tomcat
@@ -27,7 +27,7 @@ WORKDIR /opt
 RUN wget ${TOMCAT8_URL} && \
     tar -xf apache-tomcat*.tar.gz && \
     rm apache-tomcat*.tar.gz && \
-    mv apache-tomcat* ${CATALINA_HOME} \
+    mv apache-tomcat* ${CATALINA_HOME} && \
     chmod +x ${CATALINA_HOME}/bin/*sh
 
 # Create Tomcat admin user
