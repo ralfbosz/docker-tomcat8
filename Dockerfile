@@ -12,19 +12,20 @@ ENV CATALINA_HOME /opt/apache-tomcat-8.0.24
 ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
 # Install JDK8
+WORKDIR /opt
 RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
     ${JAVA8_URL} && \
-    tar -xvf jdk*.tar.gz && \
+    tar -xf jdk*.tar.gz && \
     rm jdk*.tar.gz && \
-    mv jdk* ${JAVA_HOME} \
     chown -R root:root ${JAVA_HOME} \
     alternatives --install /usr/bin/java java /opt/${JAVA_HOME}/bin/java 1 \
     alternatives --install /usr/bin/jar jar /opt/${JAVA_HOME}/bin/jar 1 \
     alternatives --install /usr/bin/javac javac /opt/${JAVA_HOME}/bin/javac 1
 
 # Install Tomcat
+WORKDIR /opt
 RUN wget ${TOMCAT8_URL} && \
-    tar -xvf apache-tomcat*.tar.gz && \
+    tar -xf apache-tomcat*.tar.gz && \
     rm apache-tomcat*.tar.gz && \
     mv apache-tomcat* ${CATALINA_HOME} \
     chmod +x ${CATALINA_HOME}/bin/*sh
