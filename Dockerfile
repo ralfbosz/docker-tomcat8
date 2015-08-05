@@ -4,9 +4,7 @@ MAINTAINER "Ralf Bosz <ralf@bosz.com>"
 RUN yum -y install apr wget
 
 ENV JAVA8_URL http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz
-#ENV JAVA8_FILE jdk-8u51-linux-x64.tar.gz
 ENV TOMCAT8_URL http://mirrors.supportex.net/apache/tomcat/tomcat-8/v8.0.24/bin/apache-tomcat-8.0.24.tar.gz
-#ENV TOMCAT8_FILE apache-tomcat-8.0.24.tar.gz
 ENV JAVA_HOME /opt/jdk1.8.0_51
 ENV CATALINA_HOME /opt/apache-tomcat-8.0.24
 ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
@@ -17,12 +15,9 @@ RUN wget -nv --no-check-certificate --no-cookies --header "Cookie: oraclelicense
     ${JAVA8_URL} && \
     tar -xf jdk*.tar.gz && \
     rm jdk*.tar.gz && \
-    chown -R root:root ${JAVA_HOME} && \
-    alternatives --install /usr/bin/java java /opt/${JAVA_HOME}/bin/java 1 && \
-    alternatives --install /usr/bin/jar jar /opt/${JAVA_HOME}/bin/jar 1 && \
-    alternatives --install /usr/bin/javac javac /opt/${JAVA_HOME}/bin/javac 1
+    chown -R root:root ${JAVA_HOME}
 
-# Install Tomcat
+# Install Tomcat 8
 WORKDIR /opt
 RUN wget -nv ${TOMCAT8_URL} && \
     tar -xf apache-tomcat*.tar.gz && \
@@ -37,7 +32,8 @@ RUN chmod +x ${CATALINA_HOME}/scripts/*.sh
 # Create tomcat user
 RUN groupadd -r tomcat && \
     useradd -g tomcat -d ${CATALINA_HOME} -s /sbin/nologin  -c "Tomcat user" tomcat && \
-    chown -R tomcat:tomcat ${CATALINA_HOME}
+    chown -R tomcat:tomcat ${CATALINA_HOME} && \
+    chmod -R o-rwx ${CATALINA_HOME}
 
 WORKDIR /opt/tomcat
 
@@ -46,3 +42,6 @@ EXPOSE 8009
 
 USER tomcat
 CMD ["tomcat.sh"]
+
+ENV JAVA8_URL
+ENV TOMCAT8_URL
