@@ -1,5 +1,5 @@
 FROM centos:centos7
-MAINTAINER "Ralf Bosz <ralf.bosz@kpn.com>"
+MAINTAINER "Ralf Bosz <ralf@bosz.com>"
 
 RUN yum -y install apr wget
 
