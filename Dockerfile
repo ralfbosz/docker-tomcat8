@@ -13,26 +13,26 @@ ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
 # Install JDK8
 RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-    $JAVA8_URL && \
-    tar -xvf $JAVA8_FILE && \
+    ${JAVA8_URL} && \
+    tar -xvf ${JAVA8_FILE} && \
     rm jdk*.tar.gz && \
     mv jdk* ${JAVA_HOME} \
-    chown -R root:root $JAVA_HOME \
-    alternatives --install /usr/bin/java java /opt/$JAVA_HOME/bin/java 1 \
-    alternatives --install /usr/bin/jar jar /opt/JAVA_HOME/bin/jar 1 \
-    alternatives --install /usr/bin/javac javac /opt/JAVA_HOME/bin/javac 1
+    chown -R root:root ${JAVA_HOME} \
+    alternatives --install /usr/bin/java java /opt/${JAVA_HOME}/bin/java 1 \
+    alternatives --install /usr/bin/jar jar /opt/${JAVA_HOME}/bin/jar 1 \
+    alternatives --install /usr/bin/javac javac /opt/${JAVA_HOME}/bin/javac 1
 
 # Install Tomcat
-RUN wget $TOMCAT8_URL && \
-    tar -xvf $TOMCAT8_FILE && \
+RUN wget ${TOMCAT8_URL} && \
+    tar -xvf ${TOMCAT8_FILE} && \
     rm apache-tomcat*.tar.gz && \
     mv apache-tomcat* ${CATALINA_HOME} \
     chmod +x ${CATALINA_HOME}/bin/*sh
 
 # Create Tomcat admin user
-ADD create_admin_user.sh $CATALINA_HOME/scripts/create_admin_user.sh
-ADD tomcat.sh $CATALINA_HOME/scripts/tomcat.sh
-RUN chmod +x $CATALINA_HOME/scripts/*.sh
+ADD create_admin_user.sh ${CATALINA_HOME}/scripts/create_admin_user.sh
+ADD tomcat.sh ${CATALINA_HOME}/scripts/tomcat.sh
+RUN chmod +x ${CATALINA_HOME}/scripts/*.sh
 
 # Create tomcat user
 RUN groupadd -r tomcat && \
