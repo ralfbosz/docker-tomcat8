@@ -3,7 +3,7 @@ MAINTAINER "Ralf Bosz <ralf.bosz@kpn.com>"
 
 RUN yum -y install apr wget
 
-ENV JAVA8_URL http://download.oracle.com/otn/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz
+ENV JAVA8_URL http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz
 ENV JAVA8_FILE jdk-8u45-linux-x64.tar.gz
 ENV TOMCAT8_URL http://mirrors.supportex.net/apache/tomcat/tomcat-8/v8.0.24/bin/apache-tomcat-8.0.24.tar.gz
 ENV TOMCAT8_FILE apache-tomcat-8.0.24.tar.gz
