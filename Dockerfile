@@ -27,7 +27,6 @@ WORKDIR /opt
 RUN wget ${TOMCAT8_URL} && \
     tar -xf apache-tomcat*.tar.gz && \
     rm apache-tomcat*.tar.gz && \
-    mv apache-tomcat* ${CATALINA_HOME} && \
     chmod +x ${CATALINA_HOME}/bin/*sh
 
 # Create Tomcat admin user
