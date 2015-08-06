@@ -11,7 +11,7 @@ ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
 # Install JDK8
 WORKDIR /opt
-RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+RUN wget -nv --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
     ${JAVA8_URL} && \
     tar -xf jdk*.tar.gz && \
     rm jdk*.tar.gz && \
