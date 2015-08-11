@@ -17,7 +17,11 @@ RUN tar -xf apache-tomcat*.tar.gz && \
 # Remove unneeded apps
 RUN rm -rf ${CATALINA_HOME}/webapps/examples && \
     rm -rf ${CATALINA_HOME}/webapps/docs && \
-    rm -rf ${CATALINA_HOME}/webapps/ROOT
+    rm -rf ${CATALINA_HOME}/webapps/ROOT && \
+    rm -rf ${CATALINA_HOME}/RELEASE-NOTES && \
+    rm -rf ${CATALINA_HOME}/RUNNING.txt && \
+    rm -rf ${CATALINA_HOME}/bin/*.bat && \
+    rm -rf ${CATALINA_HOME}/bin/*.tar.gz
 
 # Create Tomcat admin user
 ADD create_admin_user.sh ${CATALINA_HOME}/scripts/create_admin_user.sh
