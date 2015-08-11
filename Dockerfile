@@ -1,17 +1,23 @@
 FROM ralfbosz/jdk8
 MAINTAINER "Ralf Bosz <ralf@bosz.com>"
 
-ENV TOMCAT8_URL http://mirrors.supportex.net/apache/tomcat/tomcat-8/v8.0.24/bin/apache-tomcat-8.0.24.tar.gz
+ENV TOMCAT_VERSION 8.0.24
 ENV JAVA_HOME /opt/jdk1.8.0_51
-ENV CATALINA_HOME /opt/apache-tomcat-8.0.24
+ENV CATALINA_HOME /opt/apache-tomcat-${TOMCAT_VERSION}
 ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
 # Install Tomcat 8
 WORKDIR /opt
-RUN wget -nv ${TOMCAT8_URL} && \
-    tar -xf apache-tomcat*.tar.gz && \
+RUN wget --quiet --no-cookies http://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz
+RUN tar -xf apache-tomcat*.tar.gz && \
     rm apache-tomcat*.tar.gz && \
+#    ln -s apache-tomcat-* tomcat && \
     chmod +x ${CATALINA_HOME}/bin/*sh
+
+# Remove unneeded apps
+RUN rm -rf ${CATALINA_HOME}/webapps/examples && \
+    rm -rf ${CATALINA_HOME}/webapps/docs && \
+    rm -rf ${CATALINA_HOME}/webapps/ROOT
 
 # Create Tomcat admin user
 ADD create_admin_user.sh ${CATALINA_HOME}/scripts/create_admin_user.sh
