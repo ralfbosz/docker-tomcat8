@@ -6,8 +6,13 @@ ENV JAVA_HOME /opt/jdk1.8.0_51
 ENV CATALINA_HOME /opt/apache-tomcat-${TOMCAT_VERSION}
 ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
-# Install Tomcat 8
+# Install APR
 WORKDIR /opt
+ADD apr-1.5.2-1.x86_64.rpm /opt/apr-1.5.2-1.x86_64.rpm
+RUN rpm -ivh apr-1.5.2-1.x86_64.rpm && \
+    rm -f apr-1.5.2-1.x86_64.rpm
+
+# Install Tomcat 8
 RUN wget --quiet --no-cookies http://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz
 RUN tar -xf apache-tomcat*.tar.gz && \
     rm apache-tomcat*.tar.gz && \
@@ -39,6 +44,3 @@ EXPOSE 8009
 
 USER tomcat
 CMD ["tomcat.sh"]
-
-ENV JAVA8_URL ""
-ENV TOMCAT8_URL ""
