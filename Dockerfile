@@ -8,9 +8,9 @@ ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
 # Install APR
 WORKDIR /opt
-ADD apr-1.5.2-1.x86_64.rpm /opt/apr-1.5.2-1.x86_64.rpm
-RUN rpm -ivh apr-1.5.2-1.x86_64.rpm && \
-    rm -f apr-1.5.2-1.x86_64.rpm
+
+RUN yum -y install epel-release wget gcc tar make wqy-zenhei-fonts
+RUN yum -y install apr apr-devel apr-util apr-util-devel openssl-devel
 
 # Install Tomcat 8
 RUN wget --quiet --no-cookies http://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz
@@ -19,14 +19,25 @@ RUN tar -xf apache-tomcat*.tar.gz && \
 #    ln -s apache-tomcat-* tomcat && \
     chmod +x ${CATALINA_HOME}/bin/*sh
 
+# Install Tomcat-native
+RUN cd ${CATALINA_HOME}/bin && \
+    tar xfz tomcat-native.tar.gz && \
+    cd tomcat-native-*-src/jni/native/ && \
+    ./configure --with-apr=/usr/bin/apr-1-config --with-java_home=/opt/jdk1.8.0_51/ --with-ssl=yes --prefix=${CATALINA_HOME} && \
+    make && \
+    make install
+RUN cd ${CATALINA_HOME}/bin && \
+    rm -rf tomcat-native-*-src && \
+    rm -rf *.tar.gz
+
 # Remove unneeded apps
 RUN rm -rf ${CATALINA_HOME}/webapps/examples && \
     rm -rf ${CATALINA_HOME}/webapps/docs && \
     rm -rf ${CATALINA_HOME}/webapps/ROOT && \
     rm -rf ${CATALINA_HOME}/RELEASE-NOTES && \
     rm -rf ${CATALINA_HOME}/RUNNING.txt && \
-    rm -rf ${CATALINA_HOME}/bin/*.bat && \
-    rm -rf ${CATALINA_HOME}/bin/*.tar.gz
+    rm -rf ${CATALINA_HOME}/bin/*.bat #&& \
+#    rm -rf ${CATALINA_HOME}/bin/*.tar.gz
 
 # Create Tomcat admin user
 ADD create_admin_user.sh ${CATALINA_HOME}/scripts/create_admin_user.sh
@@ -38,6 +49,10 @@ RUN groupadd -r tomcat && \
     useradd -g tomcat -d ${CATALINA_HOME} -s /sbin/nologin  -c "Tomcat user" tomcat && \
     chown -R tomcat:tomcat ${CATALINA_HOME} && \
     chmod -R o-rwx ${CATALINA_HOME}
+
+# remove uneeded pkgs
+RUN yum -y remove apr-devel apr-util-devel openssl-devel cyrus-sasl-devel expat-devel keyutils-libs-devel libcom_err-devel libdb-devel libselinux-devel libsepol-devel libverto-devel openldap-devel pcre-devel sysvinit-devel zlib-devel epel-release gcc make cpp glibc-devel glibc-headers kernel-headers libmpc mpfr
+RUN yum clean all
 
 EXPOSE 8080
 EXPOSE 8009
