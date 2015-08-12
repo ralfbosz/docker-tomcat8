@@ -1,9 +1,9 @@
-FROM ralfbosz/jre8
+FROM ralfbosz/jdk8
 MAINTAINER "Ralf Bosz <ralf@bosz.com>"
 
 ENV TOMCAT_VERSION 8.0.24
 ENV CATALINA_HOME /opt/apache-tomcat-${TOMCAT_VERSION}
-ENV PATH $PATH:$JRE_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
+ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
 # Install APR
 WORKDIR /opt
@@ -16,7 +16,7 @@ RUN yum -y install epel-release gcc tar make wqy-zenhei-fontsi apr apr-devel apr
     cd ${CATALINA_HOME}/bin && \
     tar xfz tomcat-native.tar.gz && \
     cd tomcat-native-*-src/jni/native/ && \
-    ./configure --with-apr=/usr/bin/apr-1-config --with-java_home=/opt/jdk1.8.0_51/ --with-ssl=yes --prefix=${CATALINA_HOME} && \
+    ./configure --with-apr=/usr/bin/apr-1-config --with-java_home=${JAVA_HOME} --with-ssl=yes --prefix=${CATALINA_HOME} && \
     make && \
     make install && \
 # Remove unneeded apps
